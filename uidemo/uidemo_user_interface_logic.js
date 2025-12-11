@@ -109,15 +109,7 @@ function initializeState() {
             "reference_mode": "inline_snippet",
             "language": "css",
             "uri": "/home/iron/projects/seekunique/full-system/frontend/static/css/styles.css",
-            "text": "body {
-  background-color: #fff;
-  color: #333;
-}
-
-.dark-mode {
-  background-color: #333;
-  color: #fff;
-}"
+            "text": "body {\n  background-color: #fff;\n  color: #333;\n}\n\n.dark-mode {\n  background-color: #333;\n  color: #fff;\n}"
           },
           {
             "id": "/home/iron/projects/seekunique/full-system/frontend/src/components/Settings.js",
@@ -127,18 +119,7 @@ function initializeState() {
             "reference_mode": "inline_snippet",
             "language": "javascript",
             "uri": "/home/iron/projects/seekunique/full-system/frontend/src/components/Settings.js",
-            "text": "import React from 'react';
-
-const Settings = () => {
-  return (
-    <div>
-      <h2>Settings</h2>
-      {/* Dark mode toggle will go here */}
-    </div>
-  );
-};
-
-export default Settings;"
+            "text": "import React from 'react';\n\nconst Settings = () => {\n  return (\n    <div>\n      <h2>Settings</h2>\n      {/* Dark mode toggle will go here */}\n    </div>\n  );\n};\n\nexport default Settings;"
           },
           {
             "id": "selected_code",
@@ -283,11 +264,9 @@ async function onSend() {
         const data = await response.json();
         const renderedTemplate = data.rendered_template;
 
-        const responseElement = document.createElement('p');
-        responseElement.style.whiteSpace = 'pre-wrap';
-        responseElement.textContent = renderedTemplate;
-        messageHistory.appendChild(responseElement);
-        messageHistory.scrollTop = messageHistory.scrollHeight;
+        const responseArea = document.getElementById('responseArea');
+        responseArea.style.whiteSpace = 'pre-wrap';
+        responseArea.textContent = renderedTemplate;
     } catch (error) {
         console.error('Error:', error);
     }
