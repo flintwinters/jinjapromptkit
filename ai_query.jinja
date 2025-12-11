@@ -23,11 +23,11 @@ You will work with the following content:
 {% for item in content %}
 [{{ item.name }} - {{ item.language }}]
 ```
-{% if item.uri %}
+{% if item.uri -%}
 {{ item.uri }}
 {% else %}
 {{ item.text }}
-{% endif %}
+{%- endif -%}
 ```
 {% endfor %}
 ---
@@ -63,13 +63,23 @@ The output MUST be a single line of JSON matching the following schema:
   - key_points: (array of strings)
 - risks_or_issues: (array of strings)
 {%- endmacro -%}
+{% if query.from.persona.main %}
 {{ render_persona(query.from.persona.main) }}
+{% endif %}
+{% if query.select[0] %}
 {{ render_task(query.select[0]) }}
+{% endif %}
+{% if query.from.content %}
 {{ render_content(query.from.content) }}
+{% endif %}
+{% if query.select[0].constraints %}
 {{ render_constraints(query.select[0].constraints) }}
+{% endif %}
 {% if query.where.qualifiers %}
 {{ render_qualifiers(query.where.qualifiers) }}
 {% endif %}
+{% if query.select[0].output_contract %}
 {{ render_output_contract(query.select[0].output_contract) }}
+{% endif %}
 
 
