@@ -246,7 +246,7 @@
         "main": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["persona_id", "role_title", "domain_expertise", "experience_level", "description", "tone", "adjectives"],
+          "required": ["persona_id", "role_title", "domain_expertise", "experience_level", "description", "tone", "voices"],
           "properties": {
             "persona_id": { "type": "string" },
             "role_title": { "type": "string" },
@@ -254,7 +254,7 @@
             "experience_level": { "type": "string", "enum": ["junior", "mid", "senior", "principal"] },
             "description": { "type": "string" },
             "tone": { "type": "string" },
-            "adjectives": { "type": "array", "items": { "type": "string" } }
+            "voices": { "type": "array", "items": { "type": "string" } }
           }
         },
         "sub_persona": {
