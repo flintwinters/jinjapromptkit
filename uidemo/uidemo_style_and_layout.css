@@ -89,7 +89,7 @@ details {
 
 summary {
     padding: 12px 0;
-    list-style: none; 
+    list-style: none;
     cursor: pointer;
     font-weight: 700;
     color: var(--primary-dark);
@@ -111,7 +111,7 @@ details[open] > summary::before {
 }
 
 .details-content {
-    padding: 10px 0 15px 0; 
+    padding: 10px 0 15px 0;
 }
 
 details details {
@@ -163,7 +163,8 @@ details details details summary {
 }
 
 /* Select element inside the setting span */
-.inline-setting select {
+.inline-setting select,
+.inline-setting input {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -180,6 +181,17 @@ details details details summary {
     text-align: center;
     outline: none;
 }
+
+.inline-input {
+    width: 150px;
+    border-bottom: 1px dashed var(--primary-main);
+}
+
+.inline-input-number {
+    width: 50px;
+    border-bottom: 1px dashed var(--primary-main);
+}
+
 
 /* Checkbox Toggles as Inline Text */
 .inline-setting.toggle {

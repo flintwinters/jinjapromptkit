@@ -10,10 +10,27 @@ const returnFormatSelect = document.getElementById('returnFormatSelect');
 const schemaViolationSelect = document.getElementById('schemaViolationSelect');
 const emptyContentSelect = document.getElementById('emptyContentSelect');
 const summaryJson = document.getElementById('summaryJson');
+
+// New Elements
+const personaExperienceLevelSelect = document.getElementById('personaExperienceLevelSelect');
+const personaToneInput = document.getElementById('personaToneInput');
+const personaVoicesInput = document.getElementById('personaVoicesInput');
+const detailLevelSelect = document.getElementById('detailLevelSelect');
+const styleToneInput = document.getElementById('styleToneInput');
+const styleVoiceInput = document.getElementById('styleVoiceInput');
+const maxTokensOutInput = document.getElementById('maxTokensOutInput');
+const lengthHintMinInput = document.getElementById('lengthHintMinInput');
+const lengthHintMaxInput = document.getElementById('lengthHintMaxInput');
+const havingTopKInput = document.getElementById('havingTopKInput');
+const havingSourcesInput = document.getElementById('havingSourcesInput');
+
 const allControls = [
     agentSelect, levelSelect, questionPolicySelect, commentStyleSelect,
     havingEnabledToggle, packagingSelect, returnFormatSelect,
-    schemaViolationSelect, emptyContentSelect
+    schemaViolationSelect, emptyContentSelect, personaExperienceLevelSelect,
+    personaToneInput, personaVoicesInput, detailLevelSelect, styleToneInput,
+    styleVoiceInput, maxTokensOutInput, lengthHintMinInput, lengthHintMaxInput,
+    havingTopKInput, havingSourcesInput
 ];
 
 let jsonObject;
@@ -185,6 +202,20 @@ function updateUIFromState() {
     returnFormatSelect.value = jsonObject.select[0].output_contract.return_format;
     schemaViolationSelect.value = jsonObject.return.errors.on_schema_violation;
     emptyContentSelect.value = jsonObject.return.errors.on_empty_content;
+
+    // New UI elements
+    personaExperienceLevelSelect.value = jsonObject.from.persona.main.experience_level;
+    personaToneInput.value = jsonObject.from.persona.main.tone;
+    personaVoicesInput.value = jsonObject.from.persona.main.voices.join(', ');
+    detailLevelSelect.value = jsonObject.select[0].detail_level;
+    styleToneInput.value = jsonObject.select[0].style.tone;
+    styleVoiceInput.value = jsonObject.select[0].style.voice;
+    maxTokensOutInput.value = jsonObject.select[0].constraints.max_tokens_out;
+    lengthHintMinInput.value = jsonObject.select[0].constraints.length_hint_words.min;
+    lengthHintMaxInput.value = jsonObject.select[0].constraints.length_hint_words.max;
+    havingTopKInput.value = jsonObject.having.top_k;
+    havingSourcesInput.value = jsonObject.having.sources.join(', ');
+
     updateHavingToggleLabel();
 }
 
@@ -204,6 +235,21 @@ function onControlChange() {
     jsonObject.select[0].output_contract.return_format = returnFormatSelect.value;
     jsonObject.return.errors.on_schema_violation = schemaViolationSelect.value;
     jsonObject.return.errors.on_empty_content = emptyContentSelect.value;
+
+    // New UI elements
+    jsonObject.from.persona.main.experience_level = personaExperienceLevelSelect.value;
+    jsonObject.from.persona.main.tone = personaToneInput.value;
+    jsonObject.from.persona.main.voices = personaVoicesInput.value.split(',').map(s => s.trim()).filter(Boolean);
+    jsonObject.select[0].detail_level = detailLevelSelect.value;
+    jsonObject.select[0].style.tone = styleToneInput.value;
+    jsonObject.select[0].style.voice = styleVoiceInput.value;
+    jsonObject.select[0].constraints.max_tokens_out = parseInt(maxTokensOutInput.value, 10);
+    jsonObject.select[0].constraints.length_hint_words.min = parseInt(lengthHintMinInput.value, 10);
+    jsonObject.select[0].constraints.length_hint_words.max = parseInt(lengthHintMaxInput.value, 10);
+    jsonObject.having.top_k = parseInt(havingTopKInput.value, 10);
+    jsonObject.having.sources = havingSourcesInput.value.split(',').map(s => s.trim()).filter(Boolean);
+
+
     updateJsonPreview();
 }
 
@@ -225,7 +271,8 @@ havingToggleText.addEventListener('click', (e) => {
 
 // --- Event Listeners and Initialization ---
 allControls.forEach(control => {
-    control.addEventListener('change', onControlChange);
+    const eventType = (control.type === 'text' || control.type === 'number') ? 'input' : 'change';
+    control.addEventListener(eventType, onControlChange);
 });
 
 // Initialize the preview when the page loads

@@ -28,94 +28,161 @@
         </div>
 
         <div class="control-deck">
-            <details open id="level1Details">
+            <details open>
                 <summary>Level 1: Core Query Configuration</summary>
                 <div class="details-content">
-                    <div class="sentence-ui" id="l1Sentence">
-                        Execute the task using the 
+                    <div class="sentence-ui">
+                        Execute the task using the
                         <span class="inline-setting">
                             <select id="agentSelect">
-                                <option value="chat" selected>chat</option>
+                                <option value="chat">chat</option>
                                 <option value="proofreader">proofreader</option>
                                 <option value="solver">solver</option>
                                 <option value="spec">spec</option>
                                 <option value="vibe_coder">vibe_coder</option>
                             </select>
-                        </span> 
-                        agent, with complexity level 
+                        </span>
+                        agent, with complexity level
                         <span class="inline-setting">
                             <select id="levelSelect">
                                 <option value="small">small</option>
-                                <option value="medium" selected>medium</option>
+                                <option value="medium">medium</option>
                                 <option value="large">large</option>
                             </select>
                         </span>.
                     </div>
+                </div>
+            </details>
+            <details>
+                <summary>Level 2: Persona Configuration</summary>
+                <div class="details-content">
+                    <div class="sentence-ui">
+                        The AI persona is a
+                        <span class="inline-setting">
+                            <select id="personaExperienceLevelSelect">
+                                <option value="junior">junior</option>
+                                <option value="mid">mid</option>
+                                <option value="senior">senior</option>
+                                <option value="principal">principal</option>
+                            </select>
+                        </span>
+                        level expert with a
+                        <span class="inline-setting">
+                            <input type="text" id="personaToneInput" class="inline-input">
+                        </span>
+                        tone, and speaks with the following voices:
+                        <span class="inline-setting">
+                            <input type="text" id="personaVoicesInput" class="inline-input" placeholder="e.g. professional, friendly">
+                        </span>.
+                    </div>
+                </div>
+            </details>
+            <details>
+                <summary>Level 3: Task & Style</summary>
+                <div class="details-content">
+                     <div class="sentence-ui">
+                        The task is to provide a
+                        <span class="inline-setting">
+                            <select id="detailLevelSelect">
+                                <option value="brief">brief</option>
+                                <option value="normal">normal</option>
+                                <option value="detailed">detailed</option>
+                            </select>
+                        </span>
+                        summary, with a
+                        <span class="inline-setting">
+                            <input type="text" id="styleToneInput" class="inline-input">
+                        </span>
+                        tone and a
+                        <span class="inline-setting">
+                            <input type="text" id="styleVoiceInput" class="inline-input">
+                        </span>
+                        voice.
+                    </div>
+                </div>
+            </details>
+            <details>
+                <summary>Level 4: Constraints & Sourcing</summary>
+                <div class="details-content">
+                    <div class="sentence-ui">
+                        The output should be a maximum of
+                        <span class="inline-setting">
+                            <input type="number" id="maxTokensOutInput" class="inline-input-number">
+                        </span>
+                        tokens, between
+                        <span class="inline-setting">
+                            <input type="number" id="lengthHintMinInput" class="inline-input-number">
+                        </span>
+                        and
+                        <span class="inline-setting">
+                            <input type="number" id="lengthHintMaxInput" class="inline-input-number">
+                        </span>
+                        words.
+                    </div>
+                     <div class="sentence-ui">
+                        The AI should
+                        <span class="inline-setting">
+                            <select id="questionPolicySelect">
+                                <option value="ask_once_if_missing_critical_inputs">ask once if missing critical inputs</option>
+                                <option value="never_ask">never ask</option>
+                                <option value="always_ask">always ask</option>
+                            </select>
+                        </span>
+                        and use
+                        <span class="inline-setting">
+                            <select id="commentStyleSelect">
+                                <option value="no_markdown">no_markdown</option>
+                                <option value="markdown_ok">markdown_ok</option>
+                            </select>
+                        </span>
+                        comment style.
+                    </div>
+                    <div class="sentence-ui">
+                        <span id="havingToggleText" class="inline-setting toggle" data-state="true">
+                            <input type="checkbox" id="havingEnabledToggle" style="display:none;">
+                            Enable
+                        </span>
+                        external source `having` clause processing, with top_k of
+                        <span class="inline-setting">
+                            <input type="number" id="havingTopKInput" class="inline-input-number">
+                        </span>
+                        from sources:
+                        <span class="inline-setting">
+                             <input type="text" id="havingSourcesInput" class="inline-input" placeholder="e.g. internet.google, internal.knowledgebase">
+                        </span>.
+                    </div>
+                </div>
+            </details>
+            <details>
+                <summary>Level 5: Output & Error Contract</summary>
+                <div class="details-content">
+                    <div class="sentence-ui">
+                        The result must be delivered as a
+                        <span class="inline-setting">
+                            <select id="packagingSelect">
+                                <option value="single_payload">single_payload</option>
+                            </select>
+                        </span>
+                        and return format should be
+                        <span class="inline-setting">
+                            <select id="returnFormatSelect">
+                                <option value="single_json_line">single_json_line</option>
+                            </select>
+                        </span>.
 
-                    <details open id="level2Details">
-                        <summary>Level 2: Response Policy & Sourcing</summary>
-                        <div class="details-content">
-                            
-                            <div class="sentence-ui" id="l2Sentence">
-                                The AI should 
-                                <span class="inline-setting">
-                                    <select id="questionPolicySelect">
-                                        <option value="ask_once_if_missing_critical_inputs" selected>ask once if missing critical inputs</option>
-                                        <option value="never_ask">never ask</option>
-                                        <option value="always_ask">always ask</option>
-                                    </select>
-                                </span> 
-                                and use 
-                                <span class="inline-setting">
-                                    <select id="commentStyleSelect">
-                                        <option value="no_markdown">no_markdown</option>
-                                        <option value="markdown_ok" selected>markdown_ok</option>
-                                    </select>
-                                </span> 
-                                comment style. Also, 
-                                <span id="havingToggleText" class="inline-setting toggle" data-state="true">
-                                    <input type="checkbox" id="havingEnabledToggle" style="display:none;" checked>
-                                    Enable
-                                </span> 
-                                external source `having` clause processing.
-                            </div>
-
-                            <details open id="level3Details">
-                                <summary>Level 3: Final Output & Error Contract</summary>
-                                <div class="details-content">
-                                    <div class="sentence-ui" id="l3Sentence">
-                                        The result must be delivered as a 
-                                        <span class="inline-setting">
-                                            <select id="packagingSelect">
-                                                <option value="single_payload" selected>single_payload</option>
-                                            </select>
-                                        </span>
-                                        and return format should be 
-                                        <span class="inline-setting">
-                                            <select id="returnFormatSelect">
-                                                <option value="single_json_line" selected>single_json_line</option>
-                                            </select>
-                                        </span>.
-                                        
-                                        If there is a schema violation, 
-                                        <span class="inline-setting">
-                                            <select id="schemaViolationSelect">
-                                                <option value="return_error_json" selected>return_error_json</option>
-                                            </select>
-                                        </span>,
-                                        and if content is empty, 
-                                        <span class="inline-setting">
-                                            <select id="emptyContentSelect">
-                                                <option value="return_idk_literal" selected>return_idk_literal</option>
-                                            </select>
-                                        </span>.
-                                    </div>
-                                </div>
-                            </details>
-                            
-                        </div>
-                    </details>
-                    
+                        If there is a schema violation,
+                        <span class="inline-setting">
+                            <select id="schemaViolationSelect">
+                                <option value="return_error_json">return_error_json</option>
+                            </select>
+                        </span>,
+                        and if content is empty,
+                        <span class="inline-setting">
+                            <select id="emptyContentSelect">
+                                <option value="return_idk_literal">return_idk_literal</option>
+                            </select>
+                        </span>.
+                    </div>
                 </div>
             </details>
         </div>
