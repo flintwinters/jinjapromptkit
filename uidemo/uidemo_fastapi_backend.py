@@ -31,11 +31,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class Query(BaseModel):
-    query: dict
-
 @app.post("/render")
-async def render_template(query: Any):
+async def render_template(query: dict):
     # Load Jinja2 environment and template from the project root
     env = Environment(loader=FileSystemLoader(os.path.join(script_dir, '..')))
     template = env.get_template('ai_query.jinja')
