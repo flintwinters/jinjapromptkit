@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVQ Query Builder UI</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --primary-dark: #2F3E46;  /* Dark Slate/Blue */
+            --primary-main: #52B788;  /* Vibrant Green (A lighter, techy feel) */
+            --primary-light: #B7E4C7; /* Pale Green */
+            --accent: #FFD54F;        /* Amber accent for highlights */
+            --bg-warm: #F8F9FA;      /* Very pale gray background */
+            --bg-panel: #E9ECEF;     /* Slightly darker panel BG */
+            --text-dark: #212529;
+            --text-light: #FFFFFF;
+            --shadow-sm: 0 2px 5px rgba(47, 62, 70, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-warm);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Main Chat Container */
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            height: 90vh;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(47, 62, 70, 0.2);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--primary-light);
+        }
+
+        /* Header (AVQ Specific) */
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-dark), #3C6E71);
+            color: var(--text-light);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .header-title h3 {
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        /* Message History Area (Simplified for demo) */
+        .message-history {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--bg-warm);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message-history p {
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        /* Control Panel Deck */
+        .control-deck {
+            background-color: var(--bg-panel);
+            border-top: 2px solid var(--primary-main);
+        }
+        
+        /* Details/Summary Styling for Accordion (AVQ specific colors) */
+        details {
+            padding: 0 15px;
+            border-bottom: 1px solid rgba(82, 183, 136, 0.1);
+            background-color: var(--bg-panel);
+        }
+
+        summary {
+            padding: 12px 0;
+            list-style: none; 
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        summary::before {
+            content: '▶';
+            margin-right: 10px;
+            font-size: 0.7em;
+            transition: transform 0.2s;
+            color: var(--primary-main);
+        }
+
+        details[open] > summary::before {
+            transform: rotate(90deg);
+        }
+        
+        .details-content {
+            padding: 10px 0 15px 0; 
+        }
+        
+        details details {
+            padding-left: 15px;
+            border-left: 1px dashed var(--primary-light);
+            margin-top: 5px;
+        }
+
+        details details summary {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #495057;
+        }
+        
+        details details details summary {
+            font-weight: 500;
+            font-size: 0.75rem;
+            color: #6C757D;
+        }
+
+        /* --- Sentence UI Styling --- */
+        .sentence-ui {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            font-weight: 400;
+            margin-bottom: 15px;
+            border: 1px solid var(--primary-light);
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        
+        /* Style for keywords that are adjustable/selectable */
+        .inline-setting {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 0 2px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .inline-setting:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Select element inside the setting span */
+        .inline-setting select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            background: transparent;
+            color: inherit;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            width: auto;
+            text-align: center;
+            outline: none;
+        }
+        
+        /* Checkbox Toggles as Inline Text */
+        .inline-setting.toggle {
+            background-color: #ADB5BD; /* Default off/neutral color */
+        }
+        
+        .inline-setting.toggle[data-state="true"] {
+            background-color: var(--primary-main);
+        }
+        
+        .inline-setting.toggle[data-state="false"] {
+            background-color: #DC3545; /* Red for disabled/off state */
+        }
+
+
+        /* Input Area (Reused) */
+        .input-area {
+            padding: 15px;
+            background-color: #fff;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-top: 1px solid var(--bg-panel);
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--bg-panel);
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-main);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary-main), var(--primary-dark));
+            color: var(--text-light);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(47, 62, 70, 0.3);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        .send-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-title">
+                <h3>AVQ QUERY CONFIG</h3>
+            </div>
+            <div class="status-indicator">
+                AVQ-1.0 Schema
+            </div>
+        </div>
+
+        <div class="message-history" id="messageHistory">
+            <p>
+                This panel controls the parameters of the AVQ (AI-Vibe Query) structure, specifically targeting the core `agent`, `level`, and various behavioral and output policies defined in the schema.
+            </p>
+            <p id="summaryJson" style="font-size:0.8rem; font-family: monospace; background:#E9ECEF; padding:10px; border-radius:4px;">
+                // JSON Output Preview will appear here...
+            </p>
+        </div>
+
+        <div class="control-deck">
+            <details open id="level1Details">
+                <summary>Level 1: Core Query Configuration</summary>
+                <div class="details-content">
+                    <div class="sentence-ui" id="l1Sentence">
+                        Execute the task using the 
+                        <span class="inline-setting">
+                            <select id="agentSelect">
+                                <option value="chat" selected>chat</option>
+                                <option value="proofreader">proofreader</option>
+                                <option value="solver">solver</option>
+                                <option value="spec">spec</option>
+                                <option value="vibe_coder">vibe_coder</option>
+                            </select>
+                        </span> 
+                        agent, with complexity level 
+                        <span class="inline-setting">
+                            <select id="levelSelect">
+                                <option value="small">small</option>
+                                <option value="medium" selected>medium</option>
+                                <option value="large">large</option>
+                            </select>
+                        </span>.
+                    </div>
+
+                    <details open id="level2Details">
+                        <summary>Level 2: Response Policy & Sourcing</summary>
+                        <div class="details-content">
+                            
+                            <div class="sentence-ui" id="l2Sentence">
+                                The AI should 
+                                <span class="inline-setting">
+                                    <select id="questionPolicySelect">
+                                        <option value="ask_once_if_missing_critical_inputs" selected>ask once if missing critical inputs</option>
+                                        <option value="never_ask">never ask</option>
+                                        <option value="always_ask">always ask</option>
+                                    </select>
+                                </span> 
+                                and use 
+                                <span class="inline-setting">
+                                    <select id="commentStyleSelect">
+                                        <option value="no_markdown">no_markdown</option>
+                                        <option value="markdown_ok" selected>markdown_ok</option>
+                                    </select>
+                                </span> 
+                                comment style. Also, 
+                                <span id="havingToggleText" class="inline-setting toggle" data-state="true">
+                                    <input type="checkbox" id="havingEnabledToggle" style="display:none;" checked>
+                                    Enable
+                                </span> 
+                                external source `having` clause processing.
+                            </div>
+
+                            <details open id="level3Details">
+                                <summary>Level 3: Final Output & Error Contract</summary>
+                                <div class="details-content">
+                                    <div class="sentence-ui" id="l3Sentence">
+                                        The result must be delivered as a 
+                                        <span class="inline-setting">
+                                            <select id="packagingSelect">
+                                                <option value="single_payload" selected>single_payload</option>
+                                            </select>
+                                        </span>
+                                        and return format should be 
+                                        <span class="inline-setting">
+                                            <select id="returnFormatSelect">
+                                                <option value="single_json_line" selected>single_json_line</option>
+                                            </select>
+                                        </span>.
+                                        
+                                        If there is a schema violation, 
+                                        <span class="inline-setting">
+                                            <select id="schemaViolationSelect">
+                                                <option value="return_error_json" selected>return_error_json</option>
+                                            </select>
+                                        </span>,
+                                        and if content is empty, 
+                                        <span class="inline-setting">
+                                            <select id="emptyContentSelect">
+                                                <option value="return_idk_literal" selected>return_idk_literal</option>
+                                            </select>
+                                        </span>.
+                                    </div>
+                                </div>
+                            </details>
+                            
+                        </div>
+                    </details>
+                    
+                </div>
+            </details>
+        </div>
+
+        <div class="input-area">
+            <input type="text" class="chat-input" id="messageInput" placeholder="Enter query text or path...">
+            <button class="send-btn" id="sendBtn">
+                <svg class="send-icon" viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- UI Interactive Elements ---
+        const agentSelect = document.getElementById('agentSelect');
+        const levelSelect = document.getElementById('levelSelect');
+        const questionPolicySelect = document.getElementById('questionPolicySelect');
+        const commentStyleSelect = document.getElementById('commentStyleSelect');
+        const havingEnabledToggle = document.getElementById('havingEnabledToggle');
+        const havingToggleText = document.getElementById('havingToggleText');
+        const packagingSelect = document.getElementById('packagingSelect');
+        const returnFormatSelect = document.getElementById('returnFormatSelect');
+        const schemaViolationSelect = document.getElementById('schemaViolationSelect');
+        const emptyContentSelect = document.getElementById('emptyContentSelect');
+        const summaryJson = document.getElementById('summaryJson');
+        const allControls = [
+            agentSelect, levelSelect, questionPolicySelect, commentStyleSelect, 
+            havingEnabledToggle, packagingSelect, returnFormatSelect, 
+            schemaViolationSelect, emptyContentSelect
+        ];
+
+        // --- Toggles Logic ---
+        function updateHavingToggleLabel() {
+            const isChecked = havingEnabledToggle.checked;
+            havingToggleText.textContent = isChecked ? 'Enable' : 'Disable';
+            havingToggleText.setAttribute('data-state', isChecked);
+        }
+        
+        // Attach click listener to the text container to toggle the hidden checkbox
+        havingToggleText.addEventListener('click', (e) => {
+            havingEnabledToggle.checked = !havingEnabledToggle.checked;
+            updateHavingToggleLabel();
+            updateJsonPreview(); // Update preview on change
+            e.stopPropagation(); 
+        });
+        
+        // Initialize toggle labels
+        updateHavingToggleLabel();
+        
+        // --- JSON Generation Logic ---
+
+        function getBaseJsonTemplate() {
+             // Minimal valid JSON structure based on the schema required fields
+            return {
+                "version": "avq-1.0",
+                "ai_query_id": "auto-gen-001",
+                "agent": agentSelect.value,
+                "timestamp_utc": new Date().toISOString(),
+                "level": levelSelect.value,
+                
+                "select": [
+                    {
+                        "type": "summarization", 
+                        "task_goal": "summarize content of messageInput", 
+                        "detail_level": "normal",
+                        "style": {"tone": "technical", "voice": "concise", "avoid": []},
+                        "constraints": {
+                            "max_tokens_out": 2048, 
+                            "length_hint_words": {"min": 50, "max": 200},
+                            "must_include_sections": ["overview"],
+                            "forbidden_content": []
+                        },
+                        "output_contract": {
+                            "name": "CodeSummarizationV1",
+                            "media_type": "application/json",
+                            "schema_ref": "codesum_v1",
+                            "return_format": returnFormatSelect.value,
+                            "fields": {"overview": "string", "key_points": ["string"], "risks_or_issues": ["string"]}
+                        },
+                        "ask_if_ambiguous": true
+                    }
+                ],
+                
+                "from": {
+                    "persona": {
+                        "main": {
+                            "persona_id": "dev-assistant",
+                            "role_title": "AI Assistant",
+                            "domain_expertise": ["software"],
+                            "experience_level": "senior",
+                            "description": "Technical query execution engine.",
+                            "tone": "direct",
+                            "voices": ["professional"]
+                        }
+                    }
+                },
+                
+                "where": {
+                    "qualifiers": [],
+                    "specifications": {
+                        "formatting": {
+                            "sections_order": ["overview", "key_points", "risks_or_issues"],
+                            "bullets_max": 5
+                        },
+                        "question_policy": questionPolicySelect.value,
+                        "comment_style": commentStyleSelect.value
+                    }
+                },
+                
+                "having": {
+                    "enabled": havingEnabledToggle.checked,
+                    "top_k": 5,
+                    "sources": ["internet.google", "internal.knowledgebase"]
+                },
+                
+                "return": {
+                    "content_out": {
+                        "packaging": packagingSelect.value,
+                        "deliver_to": ["ui.panel:query_results"],
+                        "post_process": []
+                    },
+                    "errors": {
+                        "on_schema_violation": schemaViolationSelect.value,
+                        "on_empty_content": emptyContentSelect.value
+                    }
+                }
+            };
+        }
+
+        function updateJsonPreview() {
+            const jsonObject = getBaseJsonTemplate();
+            summaryJson.textContent = JSON.stringify(jsonObject, null, 2);
+        }
+
+        // --- Event Listeners and Initialization ---
+        allControls.forEach(control => {
+            control.addEventListener('change', updateJsonPreview);
+        });
+
+        // Initialize the preview when the page loads
+        document.addEventListener('DOMContentLoaded', updateJsonPreview);
+
+    </script>
+</body>
+</html>
