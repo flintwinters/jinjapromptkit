@@ -4,7 +4,7 @@ const levelSelect = document.getElementById('levelSelect');
 const questionPolicySelect = document.getElementById('questionPolicySelect');
 const commentStyleSelect = document.getElementById('commentStyleSelect');
 const havingEnabledToggle = document.getElementById('havingEnabledToggle');
-const havingToggleText = document.getElementById('havingToggleText');
+const havingEnabledToggleInput = document.getElementById('havingEnabledToggleInput');
 const packagingSelect = document.getElementById('packagingSelect');
 const returnFormatSelect = document.getElementById('returnFormatSelect');
 const schemaViolationSelect = document.getElementById('schemaViolationSelect');
@@ -13,24 +13,23 @@ const summaryJson = document.getElementById('summaryJson');
 
 // New Elements
 const personaExperienceLevelSelect = document.getElementById('personaExperienceLevelSelect');
-const personaToneInput = document.getElementById('personaToneInput');
-const personaVoicesInput = document.getElementById('personaVoicesInput');
+const personaToneSelect = document.getElementById('personaToneSelect');
 const detailLevelSelect = document.getElementById('detailLevelSelect');
-const styleToneInput = document.getElementById('styleToneInput');
-const styleVoiceInput = document.getElementById('styleVoiceInput');
-const maxTokensOutInput = document.getElementById('maxTokensOutInput');
-const lengthHintMinInput = document.getElementById('lengthHintMinInput');
-const lengthHintMaxInput = document.getElementById('lengthHintMaxInput');
-const havingTopKInput = document.getElementById('havingTopKInput');
-const havingSourcesInput = document.getElementById('havingSourcesInput');
+const styleToneSelect = document.getElementById('styleToneSelect');
+const styleVoiceSelect = document.getElementById('styleVoiceSelect');
+const maxTokensOutSelect = document.getElementById('maxTokensOutSelect');
+const lengthHintMinSelect = document.getElementById('lengthHintMinSelect');
+const lengthHintMaxSelect = document.getElementById('lengthHintMaxSelect');
+const havingTopKSelect = document.getElementById('havingTopKSelect');
+
 
 const allControls = [
     agentSelect, levelSelect, questionPolicySelect, commentStyleSelect,
-    havingEnabledToggle, packagingSelect, returnFormatSelect,
+    packagingSelect, returnFormatSelect,
     schemaViolationSelect, emptyContentSelect, personaExperienceLevelSelect,
-    personaToneInput, personaVoicesInput, detailLevelSelect, styleToneInput,
-    styleVoiceInput, maxTokensOutInput, lengthHintMinInput, lengthHintMaxInput,
-    havingTopKInput, havingSourcesInput
+    personaToneSelect, detailLevelSelect, styleToneSelect,
+    styleVoiceSelect, maxTokensOutSelect, lengthHintMinSelect, lengthHintMaxSelect,
+    havingTopKSelect
 ];
 
 let jsonObject;
@@ -197,7 +196,7 @@ function updateUIFromState() {
     levelSelect.value = jsonObject.level;
     questionPolicySelect.value = jsonObject.where.specifications.question_policy;
     commentStyleSelect.value = jsonObject.where.specifications.comment_style;
-    havingEnabledToggle.checked = jsonObject.having.enabled;
+    havingEnabledToggleInput.checked = jsonObject.having.enabled;
     packagingSelect.value = jsonObject.return.content_out.packaging;
     returnFormatSelect.value = jsonObject.select[0].output_contract.return_format;
     schemaViolationSelect.value = jsonObject.return.errors.on_schema_violation;
@@ -205,16 +204,14 @@ function updateUIFromState() {
 
     // New UI elements
     personaExperienceLevelSelect.value = jsonObject.from.persona.main.experience_level;
-    personaToneInput.value = jsonObject.from.persona.main.tone;
-    personaVoicesInput.value = jsonObject.from.persona.main.voices.join(', ');
+    personaToneSelect.value = jsonObject.from.persona.main.tone;
     detailLevelSelect.value = jsonObject.select[0].detail_level;
-    styleToneInput.value = jsonObject.select[0].style.tone;
-    styleVoiceInput.value = jsonObject.select[0].style.voice;
-    maxTokensOutInput.value = jsonObject.select[0].constraints.max_tokens_out;
-    lengthHintMinInput.value = jsonObject.select[0].constraints.length_hint_words.min;
-    lengthHintMaxInput.value = jsonObject.select[0].constraints.length_hint_words.max;
-    havingTopKInput.value = jsonObject.having.top_k;
-    havingSourcesInput.value = jsonObject.having.sources.join(', ');
+    styleToneSelect.value = jsonObject.select[0].style.tone;
+    styleVoiceSelect.value = jsonObject.select[0].style.voice;
+    maxTokensOutSelect.value = jsonObject.select[0].constraints.max_tokens_out;
+    lengthHintMinSelect.value = jsonObject.select[0].constraints.length_hint_words.min;
+    lengthHintMaxSelect.value = jsonObject.select[0].constraints.length_hint_words.max;
+    havingTopKSelect.value = jsonObject.having.top_k;
 
     updateHavingToggleLabel();
 }
@@ -230,7 +227,7 @@ function onControlChange() {
     jsonObject.level = levelSelect.value;
     jsonObject.where.specifications.question_policy = questionPolicySelect.value;
     jsonObject.where.specifications.comment_style = commentStyleSelect.value;
-    jsonObject.having.enabled = havingEnabledToggle.checked;
+    jsonObject.having.enabled = havingEnabledToggleInput.checked;
     jsonObject.return.content_out.packaging = packagingSelect.value;
     jsonObject.select[0].output_contract.return_format = returnFormatSelect.value;
     jsonObject.return.errors.on_schema_violation = schemaViolationSelect.value;
@@ -238,16 +235,14 @@ function onControlChange() {
 
     // New UI elements
     jsonObject.from.persona.main.experience_level = personaExperienceLevelSelect.value;
-    jsonObject.from.persona.main.tone = personaToneInput.value;
-    jsonObject.from.persona.main.voices = personaVoicesInput.value.split(',').map(s => s.trim()).filter(Boolean);
+    jsonObject.from.persona.main.tone = personaToneSelect.value;
     jsonObject.select[0].detail_level = detailLevelSelect.value;
-    jsonObject.select[0].style.tone = styleToneInput.value;
-    jsonObject.select[0].style.voice = styleVoiceInput.value;
-    jsonObject.select[0].constraints.max_tokens_out = parseInt(maxTokensOutInput.value, 10);
-    jsonObject.select[0].constraints.length_hint_words.min = parseInt(lengthHintMinInput.value, 10);
-    jsonObject.select[0].constraints.length_hint_words.max = parseInt(lengthHintMaxInput.value, 10);
-    jsonObject.having.top_k = parseInt(havingTopKInput.value, 10);
-    jsonObject.having.sources = havingSourcesInput.value.split(',').map(s => s.trim()).filter(Boolean);
+    jsonObject.select[0].style.tone = styleToneSelect.value;
+    jsonObject.select[0].style.voice = styleVoiceSelect.value;
+    jsonObject.select[0].constraints.max_tokens_out = parseInt(maxTokensOutSelect.value, 10);
+    jsonObject.select[0].constraints.length_hint_words.min = parseInt(lengthHintMinSelect.value, 10);
+    jsonObject.select[0].constraints.length_hint_words.max = parseInt(lengthHintMaxSelect.value, 10);
+    jsonObject.having.top_k = parseInt(havingTopKSelect.value, 10);
 
 
     updateJsonPreview();
@@ -255,14 +250,14 @@ function onControlChange() {
 
 // --- Toggles Logic ---
 function updateHavingToggleLabel() {
-    const isChecked = havingEnabledToggle.checked;
-    havingToggleText.textContent = isChecked ? 'Enable' : 'Disable';
-    havingToggleText.setAttribute('data-state', isChecked);
+    const isChecked = havingEnabledToggleInput.checked;
+    havingEnabledToggle.textContent = isChecked ? 'Enable' : 'Disable';
+    havingEnabledToggle.setAttribute('data-state', isChecked);
 }
 
 // Attach click listener to the text container to toggle the hidden checkbox
-havingToggleText.addEventListener('click', (e) => {
-    havingEnabledToggle.checked = !havingEnabledToggle.checked;
+havingEnabledToggle.addEventListener('click', (e) => {
+    havingEnabledToggleInput.checked = !havingEnabledToggleInput.checked;
     updateHavingToggleLabel();
     onControlChange();
     e.stopPropagation();
@@ -271,8 +266,7 @@ havingToggleText.addEventListener('click', (e) => {
 
 // --- Event Listeners and Initialization ---
 allControls.forEach(control => {
-    const eventType = (control.type === 'text' || control.type === 'number') ? 'input' : 'change';
-    control.addEventListener(eventType, onControlChange);
+    control.addEventListener('change', onControlChange);
 });
 
 // Initialize the preview when the page loads

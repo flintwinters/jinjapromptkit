@@ -68,12 +68,14 @@
                         </span>
                         level expert with a
                         <span class="inline-setting">
-                            <input type="text" id="personaToneInput" class="inline-input">
+                            <select id="personaToneSelect">
+                                <option value="professional">professional</option>
+                                <option value="direct">direct</option>
+                                <option value="friendly">friendly</option>
+                                <option value="technical">technical</option>
+                            </select>
                         </span>
-                        tone, and speaks with the following voices:
-                        <span class="inline-setting">
-                            <input type="text" id="personaVoicesInput" class="inline-input" placeholder="e.g. professional, friendly">
-                        </span>.
+                        tone.
                     </div>
                 </div>
             </details>
@@ -91,11 +93,20 @@
                         </span>
                         summary, with a
                         <span class="inline-setting">
-                            <input type="text" id="styleToneInput" class="inline-input">
+                            <select id="styleToneSelect">
+                                <option value="concise and helpful">concise and helpful</option>
+                                <option value="technical">technical</option>
+                                <option value="formal">formal</option>
+                                <option value="casual">casual</option>
+                            </select>
                         </span>
                         tone and a
                         <span class="inline-setting">
-                            <input type="text" id="styleVoiceInput" class="inline-input">
+                            <select id="styleVoiceSelect">
+                                <option value="an expert software engineer">an expert software engineer</option>
+                                <option value="a friendly assistant">a friendly assistant</option>
+                                <option value="a neutral observer">a neutral observer</option>
+                            </select>
                         </span>
                         voice.
                     </div>
@@ -107,15 +118,30 @@
                     <div class="sentence-ui">
                         The output should be a maximum of
                         <span class="inline-setting">
-                            <input type="number" id="maxTokensOutInput" class="inline-input-number">
+                            <select id="maxTokensOutSelect">
+                                <option value="512">512</option>
+                                <option value="1024">1024</option>
+                                <option value="2048">2048</option>
+                                <option value="4096">4096</option>
+                            </select>
                         </span>
                         tokens, between
                         <span class="inline-setting">
-                            <input type="number" id="lengthHintMinInput" class="inline-input-number">
+                            <select id="lengthHintMinSelect">
+                                <option value="10">10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                            </select>
                         </span>
                         and
                         <span class="inline-setting">
-                            <input type="number" id="lengthHintMaxInput" class="inline-input-number">
+                            <select id="lengthHintMaxSelect">
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                            </select>
                         </span>
                         words.
                     </div>
@@ -123,7 +149,7 @@
                         The AI should
                         <span class="inline-setting">
                             <select id="questionPolicySelect">
-                                <option value="ask_once_if_missing_critical_inputs">ask once if missing critical inputs</option>
+                                <option value="ask_once_if_missing_critical_inputs">ask once</option>
                                 <option value="never_ask">never ask</option>
                                 <option value="always_ask">always ask</option>
                             </select>
@@ -131,24 +157,25 @@
                         and use
                         <span class="inline-setting">
                             <select id="commentStyleSelect">
-                                <option value="no_markdown">no_markdown</option>
-                                <option value="markdown_ok">markdown_ok</option>
+                                <option value="no_markdown">no markdown</option>
+                                <option value="markdown_ok">markdown</option>
                             </select>
                         </span>
                         comment style.
                     </div>
                     <div class="sentence-ui">
-                        <span id="havingToggleText" class="inline-setting toggle" data-state="true">
-                            <input type="checkbox" id="havingEnabledToggle" style="display:none;">
+                        <span id="havingEnabledToggle" class="inline-setting toggle" data-state="true">
+                            <input type="checkbox" id="havingEnabledToggleInput" style="display:none;">
                             Enable
                         </span>
                         external source `having` clause processing, with top_k of
                         <span class="inline-setting">
-                            <input type="number" id="havingTopKInput" class="inline-input-number">
-                        </span>
-                        from sources:
-                        <span class="inline-setting">
-                             <input type="text" id="havingSourcesInput" class="inline-input" placeholder="e.g. internet.google, internal.knowledgebase">
+                            <select id="havingTopKSelect">
+                                <option value="0">0</option>
+                                <option value="3">3</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                            </select>
                         </span>.
                     </div>
                 </div>
