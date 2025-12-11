@@ -1,0 +1,75 @@
+{%- macro render_persona(persona) -%}
+You are a {{ persona.experience_level }} {{ persona.role_title }}.
+Your expertise is in {{ persona.domain_expertise | join(', ') }}.
+You are {{ persona.adjectives | join(', ') }}.
+Your tone should be {{ persona.tone }}.
+{{ persona.description -}}
+{%- endmacro -%}
+{%- macro render_task(task) -%}
+Your primary task is {{ task.type }}.
+The goal is to: "{{ task.task_goal }}"
+The level of detail required is {{ task.detail_level }}.
+
+STYLE GUIDE:
+- Tone: {{ task.style.tone }}
+- Voice: {{ task.style.voice }}
+{% if task.style.avoid %}
+- Avoid the following: {{ task.style.avoid | join(', ') }}
+{%- endif -%}
+{%- endmacro -%}
+{%- macro render_content(content) -%}
+You will work with the following content:
+---
+{% for item in content %}
+[{{ item.name }} - {{ item.language }}]
+```
+{% if item.uri %}
+{{ item.uri }}
+{% else %}
+{{ item.text }}
+{% endif %}
+```
+{% endfor %}
+---
+{%- endmacro -%}
+{%- macro render_constraints(constraints) -%}
+You must adhere to the following constraints:
+- Maximum Tokens: {{ constraints.max_tokens_out }}
+- Word Count: Between {{ constraints.length_hint_words.min }} and {{ constraints.length_hint_words.max }} words.
+{% if constraints.must_include_sections %}
+- You must include the following sections: {{ constraints.must_include_sections | join(', ') }}.
+{% endif %}
+{% if constraints.forbidden_content %}
+- You are forbidden from including the following: {{ constraints.forbidden_content | join(', ') }}.
+{% endif %}
+{%- endmacro -%}
+
+{%- macro render_qualifiers(qualifiers) -%}
+APPLY THE FOLLOWING QUALIFIERS:
+{% for qualifier in qualifiers %}
+- Field Path: {{ qualifier.field_path }}
+  Operator: {{ qualifier.operator }}
+  Value Type: {{ qualifier.value_type }}
+  Value: {{ qualifier.value }}
+{% endfor %}
+{%- endmacro -%}
+{%- macro render_output_contract(contract) -%}
+The output MUST be a single line of JSON matching the following schema:
+- Name: {{ contract.name }}
+- Media Type: {{ contract.media_type }}
+- Schema Reference: {{ contract.schema_ref }}
+- Fields:
+  - overview: (string)
+  - key_points: (array of strings)
+- risks_or_issues: (array of strings)
+{%- endmacro -%}
+{{ render_persona(query.from.persona.main) }}
+{{ render_task(query.select[0]) }}
+{{ render_content(query.from.content) }}
+{{ render_constraints(query.select[0].constraints) }}
+{% if query.where.qualifiers %}
+{{ render_qualifiers(query.where.qualifiers) }}
+{% endif %}
+{{ render_output_contract(query.select[0].output_contract) }}
+
+
