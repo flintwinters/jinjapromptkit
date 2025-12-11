@@ -273,7 +273,7 @@ async function onSend() {
     }
 
     try {
-        const response = await fetch('http://12-7.0.0.1:8000/render', {
+        const response = await fetch('http://127.0.0.1:8000/render', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
