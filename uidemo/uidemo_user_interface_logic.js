@@ -266,8 +266,14 @@ havingEnabledToggle.addEventListener('click', (e) => {
 });
 
 async function onSend() {
+    // Update the task_goal with the message input before sending
+    const messageInput = document.getElementById('messageInput');
+    if (messageInput.value) {
+        jsonObject.select[0].task_goal = messageInput.value;
+    }
+
     try {
-        const response = await fetch('http://127.0.0.1:8000/render', {
+        const response = await fetch('http://12-7.0.0.1:8000/render', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
