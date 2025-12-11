@@ -27,9 +27,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static files (HTML, CSS, JS)
-app.mount("/", StaticFiles(directory="uidemo", html=True), name="uidemo")
-
 class Query(BaseModel):
     query: dict
 
@@ -43,6 +40,9 @@ async def render_template(query: Any):
     rendered_template = template.render(query=query)
     
     return {"rendered_template": rendered_template}
+
+# Mount static files (HTML, CSS, JS) - MUST be after API endpoints
+app.mount("/", StaticFiles(directory="uidemo", html=True), name="uidemo")
 
 if __name__ == "__main__":
     uvicorn.run("uidemo_fastapi_backend:app", host="127.0.0.1", port=8000, reload=True)
