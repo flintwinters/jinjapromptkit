@@ -10,6 +10,8 @@ const returnFormatSelect = document.getElementById('returnFormatSelect');
 const schemaViolationSelect = document.getElementById('schemaViolationSelect');
 const emptyContentSelect = document.getElementById('emptyContentSelect');
 const summaryJson = document.getElementById('summaryJson');
+const sendBtn = document.getElementById('sendBtn');
+const messageHistory = document.getElementById('messageHistory');
 
 // New Elements
 const personaExperienceLevelSelect = document.getElementById('personaExperienceLevelSelect');
@@ -263,11 +265,35 @@ havingEnabledToggle.addEventListener('click', (e) => {
     e.stopPropagation();
 });
 
+async function onSend() {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/render', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonObject),
+        });
+        const data = await response.json();
+        const renderedTemplate = data.rendered_template;
+
+        const responseElement = document.createElement('p');
+        responseElement.style.whiteSpace = 'pre-wrap';
+        responseElement.textContent = renderedTemplate;
+        messageHistory.appendChild(responseElement);
+        messageHistory.scrollTop = messageHistory.scrollHeight;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 
 // --- Event Listeners and Initialization ---
 allControls.forEach(control => {
     control.addEventListener('change', onControlChange);
 });
+
+sendBtn.addEventListener('click', onSend);
 
 // Initialize the preview when the page loads
 document.addEventListener('DOMContentLoaded', initializeState);
