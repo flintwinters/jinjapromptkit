@@ -1,7 +1,7 @@
 {%- macro render_persona(persona) -%}
 You are a {{ persona.experience_level }} {{ persona.role_title }}.
 Your expertise is in {{ persona.domain_expertise | join(', ') }}.
-You are {{ persona.adjectives | join(', ') }}.
+You are {{ persona.voices | join(', ') }}.
 Your tone should be {{ persona.tone }}.
 {{ persona.description -}}
 {%- endmacro -%}
