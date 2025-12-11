@@ -24,18 +24,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 4px;
 }
 
 /* Main Chat Container */
         .chat-container {
             width: 100%;
             max-width: 600px;
-            height: 90vh;
+            height: 95vh;
             background: #fff;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(47, 62, 70, 0.2);
+            box-shadow: 0 5px 15px rgba(47, 62, 70, 0.2);
             display: flex;
             flex-direction: column;
             border: 1px solid var(--primary-light);
@@ -44,7 +44,7 @@ body {
 .chat-header {
     background: linear-gradient(135deg, var(--primary-dark), #3C6E71);
     color: var(--text-light);
-    padding: 15px 20px;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -54,53 +54,54 @@ body {
 
 .header-title h3 {
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
 }
 
 /* Message History Area (Simplified for demo) */
 .message-history {
     flex-grow: 1;
-    padding: 20px;
+    padding: 8px 12px;
     overflow-y: auto;
     background-color: var(--bg-warm);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 8px;
 }
 
 .message-history p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #495057;
 }
 
 /* Control Panel Deck */
 .control-deck {
     background-color: var(--bg-panel);
-    border-top: 2px solid var(--primary-main);
+    border-top: 1px solid var(--primary-main);
 }
 
 /* Details/Summary Styling for Accordion (AVQ specific colors) */
 details {
-    padding: 0 15px;
+    padding: 0 12px;
     border-bottom: 1px solid rgba(82, 183, 136, 0.1);
     background-color: var(--bg-panel);
 }
 
 summary {
-    padding: 12px 0;
+    padding: 8px 0;
     list-style: none;
     cursor: pointer;
     font-weight: 700;
     color: var(--primary-dark);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 summary::before {
     content: '▶';
-    margin-right: 10px;
-    font-size: 0.7em;
+    margin-right: 8px;
+    font-size: 0.6em;
     transition: transform 0.2s;
     color: var(--primary-main);
 }
@@ -110,47 +111,47 @@ details[open] > summary::before {
 }
 
 .details-content {
-    padding: 10px 0 15px 0;
+    padding: 5px 0 8px 0;
 }
 
 details details {
-    padding-left: 15px;
+    padding-left: 12px;
     border-left: 1px dashed var(--primary-light);
-    margin-top: 5px;
+    margin-top: 3px;
 }
 
 details details summary {
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #495057;
 }
 
 details details details summary {
     font-weight: 500;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #6C757D;
 }
 
 /* --- Sentence UI Styling --- */
 .sentence-ui {
-    font-size: 1rem;
-    line-height: 1.8;
+    font-size: 0.9rem;
+    line-height: 1.6;
     color: var(--text-dark);
     font-weight: 400;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     border: 1px solid var(--primary-light);
-    padding: 15px;
-    border-radius: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
     background-color: #fff;
 }
 
 /* Style for keywords that are adjustable/selectable */
 .inline-setting {
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 1px 6px;
+    border-radius: 3px;
     font-weight: 600;
-    margin: 0 2px;
+    margin: 0 1px;
     cursor: pointer;
     transition: background-color 0.2s, box-shadow 0.2s;
     position: relative;
@@ -182,12 +183,12 @@ details details details summary {
 }
 
 .inline-input {
-    width: 150px;
+    width: 120px;
     border-bottom: 1px dashed var(--primary-main);
 }
 
 .inline-input-number {
-    width: 50px;
+    width: 40px;
     border-bottom: 1px dashed var(--primary-main);
 }
 
@@ -208,20 +209,20 @@ details details details summary {
 
 /* Input Area (Reused) */
 .input-area {
-    padding: 15px;
+    padding: 8px 12px;
     background-color: #fff;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
     border-top: 1px solid var(--bg-panel);
 }
 
 .chat-input {
     flex-grow: 1;
-    padding: 12px 15px;
-    border: 2px solid var(--bg-panel);
-    border-radius: 25px;
-    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid var(--bg-panel);
+    border-radius: 20px;
+    font-size: 0.9rem;
     outline: none;
     transition: border-color 0.3s;
 }
@@ -234,8 +235,8 @@ details details details summary {
     background: linear-gradient(135deg, var(--primary-main), var(--primary-dark));
     color: var(--text-light);
     border: none;
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -246,8 +247,8 @@ details details details summary {
 }
 
 .send-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(47, 62, 70, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(47, 62, 70, 0.3);
 }
 
 .send-btn:active {
@@ -255,8 +256,8 @@ details details details summary {
 }
 
 .send-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     fill: currentColor;
-    margin-left: 2px;
+    margin-left: 1px;
 }
