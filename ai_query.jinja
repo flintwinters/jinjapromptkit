@@ -1,85 +1,157 @@
 {%- macro render_persona(persona) -%}
-You are a {{ persona.experience_level }} {{ persona.role_title }}.
-Your expertise is in {{ persona.domain_expertise | join(', ') }}.
-You are {{ persona.adjectives | join(', ') }}.
-Your tone should be {{ persona.tone }}.
-{{ persona.description -}}
-{%- endmacro -%}
-{%- macro render_task(task) -%}
-Your primary task is {{ task.type }}.
-The goal is to: "{{ task.task_goal }}"
-The level of detail required is {{ task.detail_level }}.
+{%- if persona.main -%}
+---
+**PRIMARY PERSONA**
+You are a {{ persona.main.experience_level }} {{ persona.main.role_title }}. Your expertise is in {{ persona.main.domain_expertise | join(', ') }}. You are known for being {{ persona.main.adjectives | join(', ') }}. Your tone should be {{ persona.main.tone }}. You will {{ persona.main.verbs | join (', ') }}.
+{{ persona.main.description -}}
+{%- endif -%}
 
-STYLE GUIDE:
-- Tone: {{ task.style.tone }}
-- Voice: {{ task.style.voice }}
-{% if task.style.avoid %}
-- Avoid the following: {{ task.style.avoid | join(', ') }}
+{%- if persona.sub_persona -%}
+**SUB-PERSONA**
+You must also apply the following skillsets: {{ persona.sub_persona.skillsets | join(', ') }}. This persona is activated if the following conditions are met:
+{{ render_qualifiers(persona.sub_persona.qualifiers) -}}
+{%- endif -%}
+
+{%- if persona.audience -%}
+**TARGET AUDIENCE ({{ persona.audience.target_label }})**
+The target audience has a {{ persona.audience.reading_level }} reading level and will consume content on the {{ persona.audience.platform }} platform.
 {%- endif -%}
 {%- endmacro -%}
+
+{%- macro render_task(task) -%}
+---
+**TASK: {{ task.type | upper }}**
+**Goal:** "{{ task.task_goal }}". The level of detail required is {{ task.detail_level }}. {% if task.ask_if_ambiguous %}If there is any ambiguity, you should ask.{% else %}You should not ask if there is any ambiguity.{% endif %}
+
+**Style Guide:** The tone should be {{ task.style.tone }} with a voice of {{ task.style.voice }}.{% if task.style.avoid %} You must avoid the following: {{ task.style.avoid | join(', ') }}.{% endif -%}
+{%- endmacro -%}
+
+{%- macro render_examples(examples) -%}
+**Examples:**
+{%- for example in examples -%}
+- **Example Input:** {{ example.input_stub }}
+  **Good Output:**
+  ```json
+  {{ example.good_output_stub | tojson(indent=2) }}
+  ```
+{%- endfor -%}
+{%- endmacro -%}
+
 {%- macro render_content(content) -%}
-You will work with the following content:
 ---
-{% for item in content %}
-[{{ item.name }} - {{ item.language }}]
+**CONTENT FOR PROCESSING**
+{%- for item in content -%}
+The content item named '{{ item.name }}' is a {{ item.media_type }} in {{ item.language }}, with its context from {{ item.media_context }}. It should be referenced as {{ item.reference_mode }}.
+Content:
 ```
-{% if item.uri -%}
-{{ item.uri }}
-{% else %}
-{{ item.text }}
-{%- endif -%}
+{%- if item.uri %}{{ item.uri }}{% else %}{{ item.text }}{% endif -%}
 ```
-{% endfor %}
----
+{%- endfor -%}
 {%- endmacro -%}
+
+{%- macro render_tables(tables) -%}
+---
+**TABLE DEFINITIONS**
+{%- for table in tables -%}
+Table '{{ table.name }}' has the following columns:
+{%- for column in table.columns -%}
+- '{{ column.name }}' of type '{{ column.type }}'.
+{%- endfor -%}
+{%- endfor -%}
+{%- endmacro -%}
+
+{%- macro render_models(models) -%}
+---
+**MODELS TO BE USED**
+These models are to be used: {% for model in models %}'{{ model.name }}' for the purpose of '{{ model.purpose }}'{% if not loop.last %}, {% endif %}{% endfor %}.
+{%- endmacro -%}
+
 {%- macro render_constraints(constraints) -%}
-You must adhere to the following constraints:
-- Maximum Tokens: {{ constraints.max_tokens_out }}
-- Word Count: Between {{ constraints.length_hint_words.min }} and {{ constraints.length_hint_words.max }} words.
-{% if constraints.must_include_sections %}
-- You must include the following sections: {{ constraints.must_include_sections | join(', ') }}.
-{% endif %}
-{% if constraints.forbidden_content %}
-- You are forbidden from including the following: {{ constraints.forbidden_content | join(', ') }}.
-{% endif %}
+---
+**CONSTRAINTS**
+{%- if constraints.must_include_sections -%}The final output must include the following sections: {{ constraints.must_include_sections | join(', ') }}.{%- endif -%}
+{%- if constraints.forbidden_content -%}You are forbidden from including the following content: {{ constraints.forbidden_content | join(', ') }}.{%- endif -%}
 {%- endmacro -%}
+
+{%- macro render_output_contract(contract) -%}
+---
+**OUTPUT CONTRACT**
+The output MUST be a single line of JSON. Its media type is '{{ contract.media_type }}' and the return format is '{{ contract.return_format }}'. The required fields schema is:
+```json
+{{ contract.fields | tojson(indent=2) }}
+```
+{%- endmacro -%}
+
 
 {%- macro render_qualifiers(qualifiers) -%}
-APPLY THE FOLLOWING QUALIFIERS:
-{% for qualifier in qualifiers %}
-- Field Path: {{ qualifier.field_path }}
-  Operator: {{ qualifier.operator }}
-  Value Type: {{ qualifier.value_type }}
-  Value: {{ qualifier.value }}
-{% endfor %}
+{%- for qualifier in qualifiers -%}
+The field path `{{ qualifier.field_path }}` must satisfy the operator `{{ qualifier.operator }}` with a value of `{{ qualifier.value }}` (type: `{{ qualifier.value_type }}`).
+{%- endfor -%}
 {%- endmacro -%}
-{%- macro render_output_contract(contract) -%}
-The output MUST be a single line of JSON matching the following schema:
-- Name: {{ contract.name }}
-- Media Type: {{ contract.media_type }}
-- Schema Reference: {{ contract.schema_ref }}
-- Fields:
-  - overview: (string)
-  - key_points: (array of strings)
-- risks_or_issues: (array of strings)
+
+{%- macro render_specifications(specs) -%}
+---
+**SPECIFICATIONS**
+**Formatting:** The sections order for formatting is {{ specs.formatting.sections_order | join(', ') }}.
+**Policy:** The question policy is '{{ specs.question_policy }}', and the comment style is '{{ specs.comment_style }}'.
 {%- endmacro -%}
-{% if query.from.persona.main %}
-{{ render_persona(query.from.persona.main) }}
-{% endif %}
-{% if query.select[0] %}
-{{ render_task(query.select[0]) }}
-{% endif %}
-{% if query.from.content %}
-{{ render_content(query.from.content) }}
-{% endif %}
-{% if query.select[0].constraints %}
-{{ render_constraints(query.select[0].constraints) }}
-{% endif %}
-{% if query.where.qualifiers %}
-{{ render_qualifiers(query.where.qualifiers) }}
-{% endif %}
-{% if query.select[0].output_contract %}
-{{ render_output_contract(query.select[0].output_contract) }}
-{% endif %}
 
+{%- macro render_having(having) -%}
+---
+**RAG (HAVING) CLAUSE**
+RAG is {% if having.enabled %}enabled{% else %}disabled{% endif %}.{%- if having.enabled %} The sources are {{ having.sources | join(', ') }}.{%- endif -%}
+{%- endmacro -%}
 
+{%- macro render_return(return_block) -%}
+---
+**RETURN BEHAVIOR**
+**Content Output:** The content output packaging is '{{ return_block.content_out.packaging }}'. It should be delivered to {{ return_block.content_out.deliver_to | join(', ') }} and post-processed with {{ return_block.content_out.post_process | join(', ') }}.
+**Error Handling:** On schema violation, '{{ return_block.errors.on_schema_violation }}' should occur. On empty content, '{{ return_block.errors.on_empty_content }}' should occur.
+{%- endmacro -%}
+{# --- MAIN TEMPLATE --- #}
+{%- if query.from.persona -%}
+{{ render_persona(query.from.persona) -}}
+{%- endif -%}
+
+{%- for task in query.select -%}
+{{ render_task(task) -}}
+{%- if task.constraints -%}
+{{ render_constraints(task.constraints) -}}
+{%- endif -%}
+{%- if task.output_contract -%}
+{{ render_output_contract(task.output_contract) -}}
+{%- endif -%}
+{%- if task.examples -%}
+{{ render_examples(task.examples) -}}
+{%- endif -%}
+{%- endfor -%}
+
+{%- if query.from.content -%}
+{{ render_content(query.from.content) -}}
+{%- endif -%}
+
+{%- if query.from.tables -%}
+{{ render_tables(query.from.tables) -}}
+{%- endif -%}
+
+{%- if query.from.models -%}
+{{ render_models(query.from.models) -}}
+{%- endif -%}
+
+{%- if query.where.qualifiers -%}
+---
+**GENERAL QUALIFIERS (WHERE CLAUSE)**
+{{ render_qualifiers(query.where.qualifiers) -}}
+{%- endif -%}
+
+{%- if query.where.specifications -%}
+{{ render_specifications(query.where.specifications) -}}
+{%- endif -%}
+
+{%- if query.having_rag -%}
+{{ render_having(query.having_rag) -}}
+{%- endif -%}
+
+{%- if query.return -%}
+{{ render_return(query.return) -}}
+{%- endif -%}

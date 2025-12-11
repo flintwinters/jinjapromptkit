@@ -8,7 +8,7 @@
   "properties": {
     "version": { "type": "string", "const": "avq-1.0" },
     "ai_query_id": { "type": "string", "minLength": 1 },
-    "agent": { "type": "string", "enum": ["chat", "proofreader", "solver", "spec", "vibe_coder"] },
+    "agent": { "type": "string", "enum": ["chat", "proofreader", "solver", "spec", "vibe_coder", "code_comparison", "test"] },
     "level": { "type": "string", "enum": ["small", "medium", "large"] },
     "timestamp_utc": { "type": "string", "format": "date-time" },
 
@@ -254,7 +254,11 @@
             "experience_level": { "type": "string", "enum": ["junior", "mid", "senior", "principal"] },
             "description": { "type": "string" },
             "tone": { "type": "string" },
-            "voices": { "type": "array", "items": { "type": "string" } }
+            "voices": { "type": "array", "items": { "type": "string" } },
+            "code_style": {
+              "conventions": {},
+              "style": {}
+            }
           }
         },
         "sub_persona": {
