@@ -1,14 +1,18 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from jinja2 import Environment, FileSystemLoader
 import json
 from typing import Any
 import uvicorn
+import os
 
 app = FastAPI()
+
+# Get the directory of the current script
+script_dir = os.path.dirname(__file__)
 
 @app.middleware("http")
 async def add_no_cache_headers(request: Request, call_next):
@@ -32,8 +36,8 @@ class Query(BaseModel):
 
 @app.post("/render")
 async def render_template(query: Any):
-    # Load Jinja2 environment and template
-    env = Environment(loader=FileSystemLoader('..'))
+    # Load Jinja2 environment and template from the project root
+    env = Environment(loader=FileSystemLoader(os.path.join(script_dir, '..')))
     template = env.get_template('ai_query.jinja')
 
     # Render the template with the provided JSON data
@@ -41,8 +45,13 @@ async def render_template(query: Any):
     
     return {"rendered_template": rendered_template}
 
-# Mount static files (HTML, CSS, JS) - MUST be after API endpoints
-app.mount("/", StaticFiles(directory="uidemo", html=True), name="uidemo")
+# Mount static files (CSS, JS) from the current directory
+app.mount("/static", StaticFiles(directory=script_dir), name="static")
+
+@app.get("/")
+async def read_index():
+    return FileResponse(os.path.join(script_dir, 'index.html'))
+
 
 if __name__ == "__main__":
     uvicorn.run("uidemo_fastapi_backend:app", host="127.0.0.1", port=8000, reload=True)
