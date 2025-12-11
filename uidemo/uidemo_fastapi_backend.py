@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from jinja2 import Environment, FileSystemLoader
 import json
 from typing import Any
+import uvicorn
 
 app = FastAPI()
 
@@ -29,3 +30,6 @@ async def render_template(query: Any):
     rendered_template = template.render(query=query)
     
     return {"rendered_template": rendered_template}
+
+if __name__ == "__main__":
+    uvicorn.run("uidemo_fastapi_backend:app", host="127.0.0.1", port=8000, reload=True)
