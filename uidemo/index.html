@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVQ Query Builder UI</title>
+    <link rel="stylesheet" href="uidemo_style_and_layout.css">
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-title">
+                <h3>AVQ QUERY CONFIG</h3>
+            </div>
+            <div class="status-indicator">
+                AVQ-1.0 Schema
+            </div>
+        </div>
+
+        <div class="message-history" id="messageHistory">
+            <p>
+                This panel controls the parameters of the AVQ (AI-Vibe Query) structure, specifically targeting the core `agent`, `level`, and various behavioral and output policies defined in the schema.
+            </p>
+            <p id="summaryJson" style="font-size:0.8rem; font-family: monospace; background:#E9ECEF; padding:10px; border-radius:4px;">
+                // JSON Output Preview will appear here...
+            </p>
+        </div>
+
+        <div class="control-deck">
+            <details open id="level1Details">
+                <summary>Level 1: Core Query Configuration</summary>
+                <div class="details-content">
+                    <div class="sentence-ui" id="l1Sentence">
+                        Execute the task using the 
+                        <span class="inline-setting">
+                            <select id="agentSelect">
+                                <option value="chat" selected>chat</option>
+                                <option value="proofreader">proofreader</option>
+                                <option value="solver">solver</option>
+                                <option value="spec">spec</option>
+                                <option value="vibe_coder">vibe_coder</option>
+                            </select>
+                        </span> 
+                        agent, with complexity level 
+                        <span class="inline-setting">
+                            <select id="levelSelect">
+                                <option value="small">small</option>
+                                <option value="medium" selected>medium</option>
+                                <option value="large">large</option>
+                            </select>
+                        </span>.
+                    </div>
+
+                    <details open id="level2Details">
+                        <summary>Level 2: Response Policy & Sourcing</summary>
+                        <div class="details-content">
+                            
+                            <div class="sentence-ui" id="l2Sentence">
+                                The AI should 
+                                <span class="inline-setting">
+                                    <select id="questionPolicySelect">
+                                        <option value="ask_once_if_missing_critical_inputs" selected>ask once if missing critical inputs</option>
+                                        <option value="never_ask">never ask</option>
+                                        <option value="always_ask">always ask</option>
+                                    </select>
+                                </span> 
+                                and use 
+                                <span class="inline-setting">
+                                    <select id="commentStyleSelect">
+                                        <option value="no_markdown">no_markdown</option>
+                                        <option value="markdown_ok" selected>markdown_ok</option>
+                                    </select>
+                                </span> 
+                                comment style. Also, 
+                                <span id="havingToggleText" class="inline-setting toggle" data-state="true">
+                                    <input type="checkbox" id="havingEnabledToggle" style="display:none;" checked>
+                                    Enable
+                                </span> 
+                                external source `having` clause processing.
+                            </div>
+
+                            <details open id="level3Details">
+                                <summary>Level 3: Final Output & Error Contract</summary>
+                                <div class="details-content">
+                                    <div class="sentence-ui" id="l3Sentence">
+                                        The result must be delivered as a 
+                                        <span class="inline-setting">
+                                            <select id="packagingSelect">
+                                                <option value="single_payload" selected>single_payload</option>
+                                            </select>
+                                        </span>
+                                        and return format should be 
+                                        <span class="inline-setting">
+                                            <select id="returnFormatSelect">
+                                                <option value="single_json_line" selected>single_json_line</option>
+                                            </select>
+                                        </span>.
+                                        
+                                        If there is a schema violation, 
+                                        <span class="inline-setting">
+                                            <select id="schemaViolationSelect">
+                                                <option value="return_error_json" selected>return_error_json</option>
+                                            </select>
+                                        </span>,
+                                        and if content is empty, 
+                                        <span class="inline-setting">
+                                            <select id="emptyContentSelect">
+                                                <option value="return_idk_literal" selected>return_idk_literal</option>
+                                            </select>
+                                        </span>.
+                                    </div>
+                                </div>
+                            </details>
+                            
+                        </div>
+                    </details>
+                    
+                </div>
+            </details>
+        </div>
+
+        <div class="input-area">
+            <input type="text" class="chat-input" id="messageInput" placeholder="Enter query text or path...">
+            <button class="send-btn" id="sendBtn">
+                <svg class="send-icon" viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script src="uidemo_user_interface_logic.js"></script>
+</body>
+</html>
