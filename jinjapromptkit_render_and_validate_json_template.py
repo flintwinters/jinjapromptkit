@@ -1,6 +1,7 @@
 import json
 from jsonschema import validate
 from jinja2 import Environment
+import argparse
 
 def render_template_with_validation(json_data, json_schema, template_string):
     """
@@ -25,19 +26,25 @@ def render_template_with_validation(json_data, json_schema, template_string):
     return template.render(json_data)
 
 if __name__ == '__main__':
-    # Example usage
-    
+    parser = argparse.ArgumentParser(description="Render a Jinja2 template with JSON data, validating against a schema.")
+    parser.add_argument('--json-input-file', type=str, help='Path to the input JSON data file.')
+    args = parser.parse_args()
+
     # 1. Input JSON data
-    input_data = {
-        "user": {
-            "name": "Alex",
-            "email": "alex@example.com"
-        },
-        "item": {
-            "name": "Laptop",
-            "price": 1200
+    if args.json_input_file:
+        with open(args.json_input_file, 'r') as f:
+            input_data = json.load(f)
+    else:
+        input_data = {
+            "user": {
+                "name": "Alex",
+                "email": "alex@example.com"
+            },
+            "item": {
+                "name": "Laptop",
+                "price": 1200
+            }
         }
-    }
 
     # 2. Input JSON schema
     schema = {
@@ -73,21 +80,22 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"An error occurred: {e}")
 
-    # Example of invalid data
-    invalid_data = {
-        "user": {
-            "name": "Alex"
-        },
-        "item": {
-            "name": "Laptop",
-            "price": "1200" # price should be a number
+    # Example of invalid data. Only run if we are not using a file input.
+    if not args.json_input_file:
+        invalid_data = {
+            "user": {
+                "name": "Alex"
+            },
+            "item": {
+                "name": "Laptop",
+                "price": "1200" # price should be a number
+            }
         }
-    }
 
-    print("\n--- Testing with invalid data ---")
-    try:
-        rendered_output = render_template_with_validation(invalid_data, schema, jinja_template)
-        print("Rendered Template:")
-        print(rendered_output)
-    except Exception as e:
-        print(f"Caught expected error: {e}")
+        print("\n--- Testing with invalid data ---")
+        try:
+            rendered_output = render_template_with_validation(invalid_data, schema, jinja_template)
+            print("Rendered Template:")
+            print(rendered_output)
+        except Exception as e:
+            print(f"Caught expected error: {e}")
