@@ -241,39 +241,64 @@
     "persona_block": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["main"],
+      "required": [
+        "persona_id",
+        "role_title",
+        "domain_expertise",
+        "experience_level",
+        "description",
+        "tone",
+        "voices",
+        "goals",
+        "mandates",
+        "work_patterns",
+        "operational_guidelines",
+        "closing",
+        "audience"
+      ],
       "properties": {
-        "main": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["persona_id", "role_title", "domain_expertise", "experience_level", "description", "tone", "voices"],
-          "properties": {
-            "persona_id": { "type": "string" },
-            "role_title": { "type": "string" },
-            "domain_expertise": { "type": "array", "items": { "type": "string" } },
-            "experience_level": { "type": "string", "enum": ["junior", "mid", "senior", "principal"] },
-            "description": { "type": "string" },
-            "tone": { "type": "string" },
-            "voices": { "type": "array", "items": { "type": "string" } },
-            "code_style": {
-              "conventions": {},
-              "style": {}
+        "persona_id": { "type": "string" },
+        "role_title": { "type": "string" },
+        "domain_expertise": { "type": "array", "items": { "type": "string" } },
+        "experience_level": { "type": "string" },
+        "description": { "type": "string" },
+        "tone": { "type": "string" },
+        "voices": { "type": "array", "items": { "type": "string" } },
+        "goals": { "type": "array", "items": { "type": "string" } },
+        "mandates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "instruction"],
+            "properties": {
+              "title": { "type": "string" },
+              "instruction": { "type": "string" }
             }
           }
         },
-        "sub_persona": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["persona_id", "skillsets", "qualifiers"],
-          "properties": {
-            "persona_id": { "type": "string" },
-            "skillsets": { "type": "array", "items": { "type": "string" } },
-            "qualifiers": {
-              "type": "array",
-              "items": { "$ref": "#/$defs/qualifier" }
+        "work_patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "instruction"],
+            "properties": {
+              "title": { "type": "string" },
+              "instruction": { "type": "string" }
             }
           }
         },
+        "operational_guidelines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "instruction"],
+            "properties": {
+              "title": { "type": "string" },
+              "instruction": { "type": "string" }
+            }
+          }
+        },
+        "closing": { "type": "string" },
         "audience": {
           "type": "object",
           "additionalProperties": false,
